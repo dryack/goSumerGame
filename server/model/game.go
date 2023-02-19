@@ -9,7 +9,6 @@ type Game struct {
 	gorm.Model
 	Location string `gorm:"type:text" json:"location"`
 	UserID   uint
-	ID       uint
 }
 
 func (game *Game) Save() (*Game, error) {
@@ -20,10 +19,12 @@ func (game *Game) Save() (*Game, error) {
 	return game, nil
 }
 
-func (game *Game) Delete() (uint, error) {
-	err := database.Database.Delete(&game).Error
+// game.Delete() sets the specified game ID to deleted and returns the number of rows impacted. If this number is 0 without an error, it implies the Game.ID was not found.
+func (game *Game) Delete() (int64, error) {
+	result := database.Database.Delete(&game)
+	err := result.Error
 	if err != nil {
-		return game.ID, err
+		return 0, err
 	}
-	return game.ID, nil
+	return result.RowsAffected, nil
 }
