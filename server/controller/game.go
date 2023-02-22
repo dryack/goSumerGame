@@ -52,6 +52,10 @@ func AddGame(context *gin.Context) {
 		return
 	}
 
+	// Testing of gameplay.Game.Load() functionality
+	// testGame := gameplay.Game{}
+	// testGame.Load(savedEntry)
+	// fmt.Printf("%#v", testGame)
 	context.JSON(http.StatusCreated, gin.H{"data": savedEntry})
 }
 

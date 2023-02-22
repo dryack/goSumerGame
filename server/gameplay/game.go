@@ -38,8 +38,11 @@ func (g *Game) Save(game *model.Game) error {
 
 	// filename will be the user's id, an underscore, and then the game's expected id based on the games table last entry
 	//filepath := "./saves/" + strconv.Itoa(int(game.UserID)) + "_" + strconv.Itoa(gameDBID.ID+1) + ".sav"
-
-	filepath := "./saves/" + strconv.Itoa(int(game.UserID)) + "_" + strconv.Itoa(int(game.ID)) + ".sav"
+	saveDir := "./saves/"
+	saveExtension := ".sav"
+	saveUserID := strconv.Itoa(int(game.UserID))
+	saveGameDBID := strconv.Itoa(int(game.ID))
+	filepath := saveDir + saveUserID + "_" + saveGameDBID + saveExtension
 	file, err := os.Create(filepath)
 	defer file.Close()
 	if err != nil {
@@ -48,5 +51,18 @@ func (g *Game) Save(game *model.Game) error {
 	game.Location = filepath
 	encoder := gob.NewEncoder(file)
 	encoder.Encode(g)
+	return nil
+}
+
+func (g *Game) Load(game *model.Game) error {
+	filepath := game.Location
+
+	file, err := os.Open(filepath)
+	defer file.Close()
+	if err != nil {
+		return err
+	}
+	decoder := gob.NewDecoder(file)
+	err = decoder.Decode(g)
 	return nil
 }
