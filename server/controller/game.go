@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"goSumerGame/server/helper"
+	"goSumerGame/server/game"
 	"goSumerGame/server/model"
 	"net/http"
 )
@@ -14,23 +14,42 @@ func AddGame(context *gin.Context) {
 		return
 	}
 
-	user, err := helper.CurrentUser(context)
-
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	user, ok := context.MustGet("user").(*model.User)
+	if !ok {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred internally"})
 	}
 
 	input.UserID = user.ID
 
-	savedGame, err := input.Save()
-
+	newGameState := game.GameState{}
+	err := newGameState.Initialize(input.Debug)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	context.JSON(http.StatusCreated, gin.H{"data": savedGame})
+	savedEntry, err := input.Save()
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = newGameState.Save(&input)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Updating here to reflect the changes to the input.Location field following the creation of the save file itself
+	// This seems safer than trying to infer the correct savegame ID by querying for the last ID in the database, and then adding 1 to it.
+	// It also is probably more performant if the database ends up really large
+	savedEntry, err = input.Update()
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusCreated, gin.H{"data": savedEntry})
 }
 
 func DeleteGame(context *gin.Context) {
@@ -40,11 +59,10 @@ func DeleteGame(context *gin.Context) {
 		return
 	}
 
-	user, err := helper.CurrentUser(context)
-
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	// user has been set in auth middleware
+	user, ok := context.MustGet("user").(*model.User)
+	if !ok {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred internally"})
 	}
 
 	input.UserID = user.ID
@@ -60,11 +78,10 @@ func DeleteGame(context *gin.Context) {
 }
 
 func GetAllGames(context *gin.Context) {
-	user, err := helper.CurrentUser(context)
-
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	// user has been set in auth middleware
+	user, ok := context.MustGet("user").(*model.User)
+	if !ok {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occured internally"})
 	}
 
 	context.JSON(http.StatusOK, gin.H{"data": user.Games})

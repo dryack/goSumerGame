@@ -9,12 +9,17 @@ import (
 	"goSumerGame/server/middleware"
 	"goSumerGame/server/model"
 	"log"
+	"strconv"
 )
 
 func main() {
+	var (
+		port = 80
+	)
+
 	loadEnv()
 	loadDatabase()
-	serveApplication()
+	serveApplication(port)
 }
 
 func loadEnv() {
@@ -27,10 +32,14 @@ func loadEnv() {
 func loadDatabase() {
 	database.Connect()
 	database.Database.AutoMigrate(&model.User{})
-	database.Database.AutoMigrate(&model.Game{})
+	err := database.Database.AutoMigrate(&model.Game{})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
 
-func serveApplication() {
+func serveApplication(port int) {
 	router := gin.Default()
 
 	publicRoutes := router.Group("/auth")
@@ -39,10 +48,11 @@ func serveApplication() {
 
 	protectedRoutes := router.Group("/api")
 	protectedRoutes.Use(middleware.JWTAuthMiddleware())
-	protectedRoutes.POST("/entry", controller.AddGame)
-	protectedRoutes.GET("/entry", controller.GetAllGames)
-	protectedRoutes.POST("/entry/delete", controller.DeleteGame)
+	protectedRoutes.POST("/game", controller.AddGame)
+	protectedRoutes.GET("/game", controller.GetAllGames)
+	protectedRoutes.POST("/game/delete", controller.DeleteGame)
 
-	router.Run(":80")
-	fmt.Println("Server running on port 8000")
+	portStr := strconv.Itoa(port)
+	router.Run(":" + portStr)
+	fmt.Printf("Server running on port %s\n", portStr)
 }
