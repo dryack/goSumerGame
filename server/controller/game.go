@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"goSumerGame/server/game"
+	"goSumerGame/server/gameplay"
 	"goSumerGame/server/model"
 	"net/http"
 )
@@ -21,7 +21,10 @@ func AddGame(context *gin.Context) {
 
 	input.UserID = user.ID
 
-	newGameState := game.GameState{}
+	newGame := gameplay.Game{}
+	newGameState := gameplay.GameState{}
+	newGame.Initialize(input.Debug, &newGameState)
+
 	err := newGameState.Initialize(input.Debug)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -34,7 +37,7 @@ func AddGame(context *gin.Context) {
 		return
 	}
 
-	err = newGameState.Save(&input)
+	err = newGame.Save(&input)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
