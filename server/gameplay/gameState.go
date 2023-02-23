@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+// GameState represents the state of the player's City State after a turn has been processed - or upon creation of the City State
 type GameState struct {
 	Year       int
 	Population int
@@ -14,6 +15,7 @@ type GameState struct {
 	Acres      int
 }
 
+// Initialize accepts a debug level. It then sets an initial GameState of the player's City State, with the debug level determining some randomization
 func (gs *GameState) Initialize(debug uint8) error {
 
 	switch debug {

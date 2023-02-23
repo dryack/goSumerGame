@@ -7,18 +7,22 @@ import (
 	"strconv"
 )
 
-type Game struct {
+// GameSession is the base data structure represent a single ongoing play session
+type GameSession struct {
 	Meta    GameMeta
 	History GameHistory
 }
 
+// GameHistory contains every GameState produced during a given play session
 type GameHistory []*GameState
 
+// GameMeta contains GameSession information that isn't related to the GameState
 type GameMeta struct {
 	DebugLevel uint8
 }
 
-func (g *Game) Initialize(debug uint8, state *GameState) error {
+// Initialize accepts a debug level and a pointer to an empty GameState, it pushes the GameState onto its History slice as the initial GameState of the play session
+func (g *GameSession) Initialize(debug uint8, state *GameState) error {
 	g.Meta.DebugLevel = debug
 	err := state.Initialize(debug)
 	if err != nil {
@@ -28,7 +32,8 @@ func (g *Game) Initialize(debug uint8, state *GameState) error {
 	return nil
 }
 
-func (g *Game) Save(game *model.Game) error {
+// Save accepts a pointer to a *model.Game, whose fields are used to determine the name of the .sav file when a GameSession is saved to disk
+func (g *GameSession) Save(game *model.Game) error {
 	// TODO: Below commented code can probably be removed, but is kept as a reference for now
 	// https://stackoverflow.com/questions/66966550/how-to-fetch-last-record-in-gorm
 	//var gameDBID struct {
@@ -54,7 +59,8 @@ func (g *Game) Save(game *model.Game) error {
 	return nil
 }
 
-func (g *Game) Load(game *model.Game) error {
+// Load accepts a pointer to a model.Game, from which it uses the Location field to determine where a GameSession is stored on disk, after which loads and decodes that .sav file
+func (g *GameSession) Load(game *model.Game) error {
 	filepath := game.Location
 
 	file, err := os.Open(filepath)
