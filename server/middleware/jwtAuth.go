@@ -71,7 +71,7 @@ func getTokenFromRequest(c *gin.Context) string {
 	token := c.Request.Header.Get("Authorization")
 	ht := strings.Split(token, " ")
 	if len(ht) == 2 {
-		fmt.Println("hToken : ", ht[1])
+		// fmt.Println("hToken : ", ht[1])
 		return ht[1]
 	}
 

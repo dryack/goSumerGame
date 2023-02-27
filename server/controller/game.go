@@ -1,12 +1,16 @@
 package controller
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"goSumerGame/server/gameplay"
 	"goSumerGame/server/model"
 	"net/http"
 )
 
+// TODO: if the saving of the .sav to disk fails, this should NOT retain the
+// created game in the database, and should make it clear that the game creation
+// has failed
 func AddGame(context *gin.Context) {
 	var input model.Game
 	if err := context.ShouldBindJSON(&input); err != nil {
@@ -59,6 +63,20 @@ func AddGame(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"data": savedEntry})
 }
 
+// findGameLocation accepts the id of the game being deleted, provided by the
+// user, and a pointer to a model.User provided by a call to context.MustGet. It
+// searches each Game in the user.Games slice until it finds id. It returns the
+// location of the .sav on disk as a string. If no matching id is found, it
+// returns an error.
+func findGameLocation(id uint, user *model.User) (string, error) {
+	for _, game := range user.Games {
+		if game.ID == id {
+			return game.Location, nil
+		}
+	}
+	return "", errors.New("provided game id not found")
+}
+
 func DeleteGame(context *gin.Context) {
 	var input model.Game
 	if err := context.ShouldBindJSON(&input); err != nil {
@@ -72,7 +90,21 @@ func DeleteGame(context *gin.Context) {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred internally"})
 	}
 
+	// determine the location of the physical .sav file
 	input.UserID = user.ID
+	gameId := input.Model.ID
+	gameLocation, err := findGameLocation(gameId, user)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	gameSession := gameplay.GameSession{}
+	// delete the .sav file
+	err = gameSession.Delete(gameLocation)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	id, err := input.Delete()
 

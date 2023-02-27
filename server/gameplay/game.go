@@ -2,6 +2,7 @@ package gameplay
 
 import (
 	"encoding/gob"
+	"fmt"
 	"goSumerGame/server/model"
 	"os"
 	"strconv"
@@ -36,13 +37,15 @@ func (g *GameSession) Initialize(debug uint8, state *GameState) error {
 func (g *GameSession) Save(game *model.Game) error {
 	// TODO: Below commented code can probably be removed, but is kept as a reference for now
 	// https://stackoverflow.com/questions/66966550/how-to-fetch-last-record-in-gorm
-	//var gameDBID struct {
+	// var gameDBID struct {
 	//	ID int
-	//}
-	//database.Database.Table("games").Last(&gameDBID)
+	// }
+	// database.Database.Table("games").Last(&gameDBID)
 
 	// filename will be the user's id, an underscore, and then the game's expected id based on the games table last entry
-	//filepath := "./saves/" + strconv.Itoa(int(game.UserID)) + "_" + strconv.Itoa(gameDBID.ID+1) + ".sav"
+	// filepath := "./saves/" + strconv.Itoa(int(game.UserID)) + "_" + strconv.Itoa(gameDBID.ID+1) + ".sav"
+
+	// TODO: handle setting up the saves dir
 	saveDir := "./saves/"
 	saveExtension := ".sav"
 	saveUserID := strconv.Itoa(int(game.UserID))
@@ -56,6 +59,15 @@ func (g *GameSession) Save(game *model.Game) error {
 	game.Location = filepath
 	encoder := gob.NewEncoder(file)
 	encoder.Encode(g)
+	return nil
+}
+
+func (g *GameSession) Delete(gameLocation string) error {
+	fmt.Println(gameLocation)
+	err := os.Remove(gameLocation)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
