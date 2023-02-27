@@ -13,8 +13,9 @@ type Game struct {
 	// 1 = starting conditions always the same
 	// 2 = all random conditions are the same
 	Debug    uint8  `gorm:"type:smallint" json:"debug"`
-	Location string //`gorm:"type:text" json:"location"`
+	Location string // `gorm:"type:text" json:"location"`
 	UserID   uint
+	Note     string `gorm:"type:varchar(600)" json:"note"`
 }
 
 // Save saves a Game to the games table
