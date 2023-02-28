@@ -82,5 +82,8 @@ func (g *GameSession) Load(game *model.Game) error {
 	}
 	decoder := gob.NewDecoder(file)
 	err = decoder.Decode(g)
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -35,7 +35,7 @@ func AddGame(context *gin.Context) {
 		return
 	}
 
-	savedEntry, err := input.Save()
+	_, err = input.Save()
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -50,6 +50,7 @@ func AddGame(context *gin.Context) {
 	// Updating here to reflect the changes to the input.Location field following the creation of the save file itself
 	// This seems safer than trying to infer the correct savegame ID by querying for the last ID in the database, and then adding 1 to it.
 	// It also is probably more performant if the database ends up really large
+	var savedEntry *model.Game
 	savedEntry, err = input.Update()
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

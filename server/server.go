@@ -9,6 +9,7 @@ import (
 	"goSumerGame/server/middleware"
 	"goSumerGame/server/model"
 	"log"
+	"os"
 	"strconv"
 )
 
@@ -53,6 +54,10 @@ func serveApplication(port int) {
 	protectedRoutes.POST("/game/delete", controller.DeleteGame)
 
 	portStr := strconv.Itoa(port)
-	router.Run(":" + portStr)
+	err := router.Run(":" + portStr)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	fmt.Printf("Server running on port %s\n", portStr)
 }
