@@ -79,16 +79,26 @@ func (g *GameSession) Delete(gameLocation string) error {
 }
 
 // Load accepts a pointer to a model.Game, from which it uses the Location field to determine where a GameSession is stored on disk, after which loads and decodes that .sav file
-func (g *GameSession) Load(game *model.Game) error {
-	filepath := game.Location
-
-	file, err := os.Open(filepath)
+func (g *GameSession) Load(gameLocation string) error {
+	file, err := os.Open(gameLocation)
 	defer file.Close()
 	if err != nil {
 		return err
 	}
 	decoder := gob.NewDecoder(file)
 	err = decoder.Decode(g)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *GameSession) Test(game *model.Game) error {
+	newGameState := g.History[len(g.History)-1]
+	fmt.Println(len(g.History))
+	newGameState.Acres += 100
+	g.History = append(g.History, newGameState)
+	err := g.Save(game)
 	if err != nil {
 		return err
 	}

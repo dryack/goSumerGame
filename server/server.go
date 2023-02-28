@@ -50,6 +50,7 @@ func serveApplication(port int) {
 	protectedRoutes := router.Group("/api")
 	protectedRoutes.Use(middleware.JWTAuthMiddleware())
 	protectedRoutes.POST("/game", controller.AddGame)
+	protectedRoutes.POST("/game/play", controller.TakeTurn)
 	protectedRoutes.GET("/game", controller.GetAllGames)
 	protectedRoutes.POST("/game/delete", controller.DeleteGame)
 
