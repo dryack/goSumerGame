@@ -25,11 +25,7 @@ func AddGame(context *gin.Context) {
 
 	input.UserID = user.ID
 
-	newGame := gameplay.GameSession{}
-	newGameState := gameplay.GameState{}
-	newGame.Initialize(input.Debug, &newGameState)
-
-	err := newGameState.Initialize(input.Debug)
+	newGame, err := setupGameSession(input)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -64,18 +60,14 @@ func AddGame(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"data": savedEntry})
 }
 
-// findGameLocation accepts the id of the game being deleted, provided by the
-// user, and a pointer to a model.User provided by a call to context.MustGet. It
-// searches each Game in the user.Games slice until it finds id. It returns the
-// location of the .sav on disk as a string. If no matching id is found, it
-// returns an error.
-func findGameLocation(id uint, user *model.User) (string, error) {
-	for _, game := range user.Games {
-		if game.ID == id {
-			return game.Location, nil
-		}
-	}
-	return "", errors.New("provided game id not found")
+// setupGameSession initializes the gameplay.GameSession and gameplay.GameState for a new model.Game
+func setupGameSession(input model.Game) (gameplay.GameSession, error) {
+	newGame := gameplay.GameSession{}
+	newGameState := gameplay.GameState{}
+	newGame.Initialize(input.Debug, &newGameState)
+
+	err := newGameState.Initialize(input.Debug)
+	return newGame, err
 }
 
 func DeleteGame(context *gin.Context) {
@@ -115,6 +107,20 @@ func DeleteGame(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusFound, gin.H{"data": id})
+}
+
+// findGameLocation accepts the id of the game being deleted, provided by the
+// user, and a pointer to a model.User provided by a call to context.MustGet. It
+// searches each Game in the user.Games slice until it finds id. It returns the
+// location of the .sav on disk as a string. If no matching id is found, it
+// returns an error.
+func findGameLocation(id uint, user *model.User) (string, error) {
+	for _, game := range user.Games {
+		if game.ID == id {
+			return game.Location, nil
+		}
+	}
+	return "", errors.New("provided game id not found")
 }
 
 func GetAllGames(context *gin.Context) {

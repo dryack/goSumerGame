@@ -2,6 +2,7 @@ package gameplay
 
 import (
 	"encoding/gob"
+	"errors"
 	"fmt"
 	"goSumerGame/server/model"
 	"os"
@@ -45,11 +46,17 @@ func (g *GameSession) Save(game *model.Game) error {
 	// filename will be the user's id, an underscore, and then the game's expected id based on the games table last entry
 	// filepath := "./saves/" + strconv.Itoa(int(game.UserID)) + "_" + strconv.Itoa(gameDBID.ID+1) + ".sav"
 
-	// TODO: handle setting up the saves dir
 	saveDir := "./saves/"
 	saveExtension := ".sav"
 	saveUserID := strconv.Itoa(int(game.UserID))
 	saveGameDBID := strconv.Itoa(int(game.ID))
+	// check if the saveDir exists - create it if not
+	if _, err := os.Stat(saveDir); errors.Is(err, os.ErrNotExist) {
+		err := os.Mkdir(saveDir, os.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
 	filepath := saveDir + saveUserID + "_" + saveGameDBID + saveExtension
 	file, err := os.Create(filepath)
 	defer file.Close()
