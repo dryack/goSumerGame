@@ -18,6 +18,12 @@ type Game struct {
 	Note     string `gorm:"type:varchar(600)" json:"note"`
 }
 
+// Instructions represent the player's instructions for a game turn
+type Instructions struct {
+	GameID        uint
+	PurchaseAcres int
+}
+
 // Save saves a Game to the games table
 func (game *Game) Save() (*Game, error) {
 	err := database.Database.Create(&game).Error

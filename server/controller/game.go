@@ -42,11 +42,13 @@ func userExist(context *gin.Context) (*model.User, bool) {
 }
 
 func TakeTurn(context *gin.Context) {
-	var input model.Game
-	if err := context.ShouldBindJSON(&input); err != nil {
+	var gameModel model.Game
+	var instructions model.Instructions
+	if err := context.ShouldBindJSON(&instructions); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	gameModel.ID = instructions.GameID
 
 	user, ok := context.MustGet("user").(*model.User)
 	if !ok {
@@ -55,19 +57,19 @@ func TakeTurn(context *gin.Context) {
 	}
 
 	gameSession := gameplay.GameSession{}
-	input.UserID = user.ID
-	gameId := input.Model.ID
+	gameModel.UserID = user.ID
+	gameId := instructions.GameID
 	gameLocation, err := findGameLocation(gameId, user)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	err = gameSession.Load(gameLocation)
-	fmt.Printf("%#v\n%#v\n", gameSession.Meta, gameSession.History[len(gameSession.History)-1])
-	err = gameSession.Test(&input)
+	fmt.Printf("%#v\n%#v\n", gameSession.Meta, gameSession.History[len(gameSession.History)-1]) // debug
+	err = gameSession.Test(&instructions, &gameModel)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	fmt.Printf("%#v\n%#v\n", gameSession.Meta, gameSession.History[len(gameSession.History)-1]) // debug
 }

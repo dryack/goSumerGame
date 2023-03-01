@@ -34,6 +34,7 @@ func Register(context *gin.Context) {
 	createSendToken(context, *savedUser, http.StatusCreated)
 }
 
+// FIXME: this has stopped correctly returning the user's games
 func Login(context *gin.Context) {
 	var input model.AuthenticationInput
 
