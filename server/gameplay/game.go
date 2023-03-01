@@ -94,13 +94,29 @@ func (g *GameSession) Load(gameLocation string) error {
 }
 
 func (g *GameSession) Test(instructions *model.Instructions, game *model.Game) error {
-	newGameState := g.History[len(g.History)-1]
+	oldGameState := g.History[len(g.History)-1]
+	newGameState := oldGameState
+	err := validateInstructions(*instructions, *oldGameState)
+	if err != nil {
+		return err
+	}
 	newGameState.Acres += instructions.PurchaseAcres
 	g.History = append(g.History, newGameState)
 
-	err := g.Save(game)
+	err = g.Save(game)
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func validateInstructions(instructions model.Instructions, gameState GameState) error {
+	totAcres := gameState.Acres + instructions.PurchaseAcres
+	if totAcres < 0 {
+		err1 := errors.New("you don't have enough acres to sell")
+		err2 := fmt.Errorf(" acres: %d", gameState.Acres)
+		err3 := fmt.Errorf(" change: %d", instructions.PurchaseAcres)
+		return errors.Join(err1, err2, err3)
 	}
 	return nil
 }
