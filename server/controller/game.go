@@ -65,7 +65,7 @@ func TakeTurn(context *gin.Context) {
 		return
 	}
 	err = gameSession.Load(gameLocation)
-	fmt.Printf("%#v\n%#v\n", gameSession.Meta, gameSession.History[len(gameSession.History)-1]) // debug
+	// fmt.Printf("%#v\n%#v\n", gameSession.Meta, gameSession.History[len(gameSession.History)-1]) // debug
 	err = gameSession.Test(&instructions, &gameModel)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

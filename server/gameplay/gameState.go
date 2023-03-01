@@ -17,7 +17,7 @@ type GameState struct {
 	PopulationStarved    int
 	PopulationDied       int // needed?  we really may not need variables that can be derived by comparison
 	Bushels              int
-	BushelTradeValue     int
+	AcreValue            int
 	BushelYield          int
 	PestsAte             int
 	Acres                int
@@ -37,11 +37,11 @@ func (gs *GameState) Initialize(debug uint8) error {
 
 	switch debug {
 	case 0:
-		gs.BushelTradeValue = 17 + rand.Intn(10)
+		gs.AcreValue = 17 + rand.Intn(10)
 	case 1:
-		gs.BushelTradeValue = 20
+		gs.AcreValue = 20
 	case 2:
-		gs.BushelTradeValue = 20
+		gs.AcreValue = 20
 	default:
 		err := errors.New("invalid debug level:" + strconv.Itoa(int(debug)))
 		return err

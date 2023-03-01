@@ -100,23 +100,14 @@ func (g *GameSession) Test(instructions *model.Instructions, game *model.Game) e
 	if err != nil {
 		return err
 	}
+
 	newGameState.Acres += instructions.PurchaseAcres
+	newGameState.Bushels -= instructions.PurchaseAcres * oldGameState.AcreValue
 	g.History = append(g.History, newGameState)
 
 	err = g.Save(game)
 	if err != nil {
 		return err
-	}
-	return nil
-}
-
-func validateInstructions(instructions model.Instructions, gameState GameState) error {
-	totAcres := gameState.Acres + instructions.PurchaseAcres
-	if totAcres < 0 {
-		err1 := errors.New("you don't have enough acres to sell")
-		err2 := fmt.Errorf(" acres: %d", gameState.Acres)
-		err3 := fmt.Errorf(" change: %d", instructions.PurchaseAcres)
-		return errors.Join(err1, err2, err3)
 	}
 	return nil
 }
