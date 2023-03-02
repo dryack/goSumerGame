@@ -16,7 +16,7 @@ type Game struct {
 	// etc.
 	Debug    uint8 `gorm:"type:smallint" json:"debug"`
 	Turns    uint
-	Location string // `gorm:"type:text" json:"location"`
+	Location string
 	Note     string `gorm:"type:varchar(600)" json:"note"`
 }
 
