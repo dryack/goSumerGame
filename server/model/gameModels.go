@@ -25,6 +25,7 @@ type Instructions struct {
 	GameID         uint
 	PurchaseAcres  int
 	ReleaseBushels int
+	PlantAcres     int
 }
 
 // Save saves a Game to the games table

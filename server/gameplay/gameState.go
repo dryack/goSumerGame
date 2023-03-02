@@ -22,6 +22,7 @@ type GameState struct {
 	PestsAte             int
 	Acres                int
 	AcresPlanted         int
+	BushelsToPlantAcre   int
 	Granaries            int
 	Plows                int
 	Cows                 int
