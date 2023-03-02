@@ -72,4 +72,9 @@ func TakeTurn(context *gin.Context) {
 		return
 	}
 	fmt.Printf("%#v\n%#v\n", gameSession.Meta, gameSession.History[len(gameSession.History)-1]) // debug
+	gameModel.Turns = uint(len(gameSession.History) - 1)
+	_, err = gameModel.Update()
+	if err != nil {
+		return
+	}
 }

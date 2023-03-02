@@ -96,15 +96,12 @@ func (g *GameSession) Load(gameLocation string) error {
 func (g *GameSession) Test(instructions *model.Instructions, game *model.Game) error {
 	oldGameState := g.History[len(g.History)-1]
 	newGameState := oldGameState
-	err := validateInstructions(*instructions, *oldGameState)
+	err := validateInstructions(*instructions, *oldGameState, newGameState)
 	if err != nil {
 		return err
 	}
 
-	newGameState.Acres += instructions.PurchaseAcres
-	newGameState.Bushels -= instructions.PurchaseAcres * oldGameState.AcreValue
 	g.History = append(g.History, newGameState)
-
 	err = g.Save(game)
 	if err != nil {
 		return err

@@ -23,7 +23,7 @@ After `TOKEN_TTL` hours has passed, your auth token will have expired, and you'l
 
 #### Taking a Turn
 Currently there's not much going on here, but:
-`$  curl -d '{"gameid":2,"purchaseacres":100}' -H "Content-Type: application/json" -H "Authorization: Bearer <token received during registration or login>" -X POST http://localhost:80/api/game/play`
+`$  curl -d '{"gameid":2,"purchaseacres":100,"releasebushels":250}' -H "Content-Type: application/json" -H "Authorization: Bearer <token received during registration or login>" -X POST http://localhost:80/api/game/play`
 
 ### Client
 (Currently unimplemented)

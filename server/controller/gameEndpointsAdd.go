@@ -46,6 +46,7 @@ func AddGame(context *gin.Context) {
 	// This seems safer than trying to infer the correct savegame ID by querying for the last ID in the database, and then adding 1 to it.
 	// It also is probably more performant if the database ends up really large
 	var savedEntry *model.Game
+	input.Turns = 0
 	savedEntry, err = input.Update()
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

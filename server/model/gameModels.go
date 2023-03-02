@@ -8,20 +8,23 @@ import (
 // Game represents an individual row in the games table
 type Game struct {
 	gorm.Model
+	UserID uint
 	// Debug game levels:
 	// 0 = normal game
 	// 1 = starting conditions always the same
 	// 2 = all random conditions are the same
-	Debug    uint8  `gorm:"type:smallint" json:"debug"`
+	// etc.
+	Debug    uint8 `gorm:"type:smallint" json:"debug"`
+	Turns    uint
 	Location string // `gorm:"type:text" json:"location"`
-	UserID   uint
 	Note     string `gorm:"type:varchar(600)" json:"note"`
 }
 
 // Instructions represent the player's instructions for a game turn
 type Instructions struct {
-	GameID        uint
-	PurchaseAcres int
+	GameID         uint
+	PurchaseAcres  int
+	ReleaseBushels int
 }
 
 // Save saves a Game to the games table
