@@ -8,29 +8,30 @@ import (
 
 // GameState represents the state of the player's City State after a turn has been processed - or upon creation of the City State
 type GameState struct {
-	Year                 int
-	Population           int
-	PopulationFed        int
-	PopulationFedByCows  int
-	PopulationImmigrated int
-	PopulationEmigrated  int
-	PopulationStarved    int
-	PopulationDied       int // needed?  we really may not need variables that can be derived by comparison
-	Bushels              int
-	AcreValue            int
-	BushelYield          int
-	PestsAte             int
-	Acres                int
-	AcresPlanted         int
-	BushelsToPlantAcre   int
-	Granaries            int
-	Plows                int
-	Cows                 int
-	Stelae               int
-	BuildingPalace       int
-	PalaceLvl1           bool
-	PalaceLvl2           bool
-	PalaceLvl3           bool
+	Year                          int
+	Population                    int
+	PopulationFed                 int
+	PopulationFedByCows           int
+	PopulationImmigrated          int
+	PopulationEmigrated           int
+	PopulationStarved             int
+	PopulationDied                int // needed?  we really may not need variables that can be derived by comparison
+	Bushels                       int
+	AcreValue                     int
+	BushelYield                   int
+	PestsAte                      int
+	Acres                         int
+	AcresPlanted                  int
+	AcresPlantedToBushelsRatio    int
+	AcresPlantedToPopulationRatio int
+	Granaries                     int
+	Plows                         int
+	Cows                          int
+	Stelae                        int
+	BuildingPalace                int
+	PalaceLvl1                    bool
+	PalaceLvl2                    bool
+	PalaceLvl3                    bool
 }
 
 // Initialize accepts a debug level. It then sets an initial GameState of the player's City State, with the debug level determining some randomization
@@ -60,6 +61,8 @@ func (gs *GameState) Initialize(debug uint8) error {
 	gs.PestsAte = 200
 	gs.Acres = 1000
 	gs.AcresPlanted = 0
+	gs.AcresPlantedToBushelsRatio = 2     // every bushel can seed 2 acres with starting tech
+	gs.AcresPlantedToPopulationRatio = 10 // every pop can plant 10 acres with starting tech
 	gs.Granaries = 0
 	gs.Plows = 0
 	gs.Cows = 0
