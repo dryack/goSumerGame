@@ -49,5 +49,12 @@ func validateInstructions(instructions model.Instructions, gameState GameState, 
 	newGameState.AcresPlanted = instructions.PlantAcres
 	tempGameState.Bushels = newGameState.Bushels
 
+	err = verifyGranaries(instructions, tempGameState)
+	if err != nil {
+		return err
+	}
+	newGameState.Bushels -= instructions.PurchaseGranaries * CostGranary
+	newGameState.Granaries += instructions.PurchaseGranaries
+
 	return nil
 }
