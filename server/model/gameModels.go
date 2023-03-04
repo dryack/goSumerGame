@@ -22,10 +22,11 @@ type Game struct {
 
 // Instructions represent the player's instructions for a game turn
 type Instructions struct {
-	GameID         uint
-	PurchaseAcres  int
-	ReleaseBushels int
-	PlantAcres     int
+	GameID            uint
+	PurchaseAcres     int
+	ReleaseBushels    int
+	PlantAcres        int
+	PurchaseGranaries int
 }
 
 // Save saves a Game to the games table
