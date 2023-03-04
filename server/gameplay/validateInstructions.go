@@ -8,16 +8,19 @@ const (
 	InputString = "input" // saving some typing across a lot of error messages
 )
 
-// validateInstructions ensures that all player instructions are valid, and then
+// validateInstructions ensures that all player instructions are valid. It
 // simulates them being applied in order, to ensure that the entire sequence of
 // orders will not result in an invalid state.
 //
 // - Any error will cause the turn to not be taken, and the specific error will be
-// returned to the player by gin. newGameState is the candidate gameState to be
-// appended to the gameSession.History, assuming there are no errors.
+// returned to the player by gin.
 //
-// - tempGameState is the prior turn, used to perform operations in order,
-// for simulating the player's instructions
+// - tempGameState is the prior turn's gameState. Instructions from the player
+// are checked against and applied to items like Acres and Bushels, ensuring
+// commands are not invalid.
+//
+// - newGameState is a pointer to the candidate gameState that will be appended
+// to the gameSession.History if there are no errors.
 func validateInstructions(instructions model.Instructions, gameState GameState, newGameState *GameState) error {
 	tempGameState := gameState
 
