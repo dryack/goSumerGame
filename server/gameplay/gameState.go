@@ -8,30 +8,33 @@ import (
 
 // GameState represents the state of the player's City State after a turn has been processed - or upon creation of the City State
 type GameState struct {
-	Year                          int
-	Population                    int
-	PopulationFed                 int
-	PopulationFedByCows           int
-	PopulationImmigrated          int
-	PopulationEmigrated           int
-	PopulationStarved             int
-	PopulationDied                int // needed?  we really may not need variables that can be derived by comparison
-	Bushels                       int
-	AcreValue                     int
-	BushelYield                   int
-	PestsAte                      int
-	Acres                         int
-	AcresPlanted                  int
-	AcresPlantedToBushelsRatio    int
-	AcresPlantedToPopulationRatio int
-	Granaries                     int
-	Plows                         int
-	Cows                          int
-	Stelae                        int
-	BuildingPalace                int
-	PalaceLvl1                    bool
-	PalaceLvl2                    bool
-	PalaceLvl3                    bool
+	Year                          int  `json:"year,omitempty"`
+	Population                    int  `json:"population,omitempty"`
+	PopulationFed                 int  `json:"population_fed,omitempty"`
+	PopulationFedByCows           int  `json:"population_fed_by_cows,omitempty"`
+	PopulationImmigrated          int  `json:"population_immigrated,omitempty"`
+	PopulationEmigrated           int  `json:"population_emigrated,omitempty"`
+	PopulationStarved             int  `json:"population_starved,omitempty"`
+	PopulationDied                int  `json:"population_died,omitempty"` // needed?  we really may not need variables that can be derived by comparison
+	Bushels                       int  `json:"bushels,omitempty"`
+	AcreValue                     int  `json:"acre_value,omitempty"`
+	AcreGrainYield                int  `json:"acre_grain_yield,omitempty"`
+	PestsAte                      int  `json:"pests_ate,omitempty"`
+	Acres                         int  `json:"acres,omitempty"`
+	AcresPlanted                  int  `json:"acres_planted,omitempty"`
+	AcresPlantedToBushelsRatio    int  `json:"acres_planted_to_bushels_ratio,omitempty"`
+	AcresPlantedToPopulationRatio int  `json:"acres_planted_to_population_ratio,omitempty"`
+	Granaries                     int  `json:"granaries,omitempty"`
+	Plows                         int  `json:"plows,omitempty"`
+	CowHerds                      int  `json:"cow_herds,omitempty"`
+	Stelae                        int  `json:"stelae,omitempty"`
+	Ziggurats                     int  `json:"ziggurats,omitempty"`
+	Temples                       int  `json:"temples,omitempty"`
+	Plague                        int  `json:"plague,omitempty"`
+	BuildingPalace                int  `json:"building_palace,omitempty"`
+	PalaceLvl1                    bool `json:"palace_lvl_1,omitempty"`
+	PalaceLvl2                    bool `json:"palace_lvl_2,omitempty"`
+	PalaceLvl3                    bool `json:"palace_lvl_3,omitempty"`
 }
 
 // Initialize accepts a debug level. It then sets an initial GameState of the player's City State, with the debug level determining some randomization
@@ -49,24 +52,27 @@ func (gs *GameState) Initialize(debug uint8) error {
 		return err
 	}
 	gs.Year = 0
-	gs.Population = 100
+	gs.Population = StartingPopulation
 	gs.PopulationFed = 100
 	gs.PopulationFedByCows = 0
 	gs.PopulationImmigrated = 0
 	gs.PopulationEmigrated = 0
 	gs.PopulationStarved = 0
 	gs.PopulationDied = 0
-	gs.Bushels = 2000
-	gs.BushelYield = 3
+	gs.Bushels = StartingBushels
+	gs.AcreGrainYield = StartingAcreGrainYield
 	gs.PestsAte = 200
-	gs.Acres = 1000
+	gs.Acres = StartingAcres
 	gs.AcresPlanted = 0
-	gs.AcresPlantedToBushelsRatio = 2     // every bushel can seed 2 acres with starting tech
-	gs.AcresPlantedToPopulationRatio = 10 // every pop can plant 10 acres with starting tech
+	gs.AcresPlantedToBushelsRatio = StartingBushelSeedingRatio // every bushel can seed 2 acres with starting tech
+	gs.AcresPlantedToPopulationRatio = StartingPopulationRatio // every pop can plant 10 acres with starting tech
 	gs.Granaries = 0
 	gs.Plows = 0
-	gs.Cows = 0
+	gs.CowHerds = 0
 	gs.Stelae = 0
+	gs.Ziggurats = 0
+	gs.Temples = 0
+	gs.Plague = 0
 	gs.BuildingPalace = 0
 	gs.PalaceLvl1 = false
 	gs.PalaceLvl2 = false

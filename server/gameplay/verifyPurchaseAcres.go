@@ -2,10 +2,9 @@ package gameplay
 
 import (
 	"fmt"
-	"goSumerGame/server/model"
 )
 
-func verifyPurchaseAcres(instructions model.Instructions, gameState GameState) error {
+func verifyPurchaseAcres(instructions Instructions, gameState GameState) error {
 	const (
 		ErrNotEnoughAcres   = "purchase/sell acres: you don't have enough acres to sell"
 		ErrNotEnoughBushels = "purchase/sell acres: you don't have enough bushels to afford this"

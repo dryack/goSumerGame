@@ -2,10 +2,9 @@ package gameplay
 
 import (
 	"fmt"
-	"goSumerGame/server/model"
 )
 
-func verifyPlanting(instructions model.Instructions, gameState GameState) error {
+func verifyPlanting(instructions Instructions, gameState GameState) error {
 	const (
 		ErrNegativeAcres       = "planting: you can't plant a negative amount of acres"
 		ErrNotEnoughGrain      = "planting: you don't have enough grain to seed this many acres"

@@ -1,9 +1,5 @@
 package gameplay
 
-import (
-	"goSumerGame/server/model"
-)
-
 const (
 	InputString = "input" // saving some typing across a lot of error messages
 )
@@ -21,7 +17,7 @@ const (
 //
 // - newGameState is a pointer to the candidate gameState that will be appended
 // to the gameSession.History if there are no errors.
-func validateInstructions(instructions model.Instructions, gameState GameState, newGameState *GameState) error {
+func validateInstructions(instructions Instructions, gameState GameState, newGameState *GameState) error {
 	tempGameState := gameState
 
 	// TODO: Blocks after a verifySomething() should be extracted to their own functions

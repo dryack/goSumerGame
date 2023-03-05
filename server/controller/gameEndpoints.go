@@ -43,7 +43,7 @@ func userExist(context *gin.Context) (*model.User, bool) {
 
 func TakeTurn(context *gin.Context) {
 	var gameModel model.Game
-	var instructions model.Instructions
+	var instructions gameplay.Instructions
 	if err := context.ShouldBindJSON(&instructions); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -66,7 +66,8 @@ func TakeTurn(context *gin.Context) {
 	}
 	err = gameSession.Load(gameLocation)
 	// fmt.Printf("%#v\n%#v\n", gameSession.Meta, gameSession.History[len(gameSession.History)-1]) // debug
-	err = gameSession.Test(&instructions, &gameModel)
+	var turnResponse gameplay.TurnResponse
+	turnResponse, err = gameSession.Test(&instructions, &gameModel)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -77,4 +78,6 @@ func TakeTurn(context *gin.Context) {
 	if err != nil {
 		return
 	}
+
+	context.JSON(http.StatusOK, gin.H{"results": turnResponse})
 }

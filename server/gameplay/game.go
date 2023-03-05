@@ -93,13 +93,37 @@ func (g *GameSession) Load(gameLocation string) error {
 	return nil
 }
 
-func (g *GameSession) Test(instructions *model.Instructions, game *model.Game) error {
+func (g *GameSession) Test(instructions *Instructions, game *model.Game) (TurnResponse, error) {
+	oldGameState := g.History[len(g.History)-1]
+	newGameState := oldGameState
+	err := validateInstructions(*instructions, *oldGameState, newGameState)
+	if err != nil {
+		return TurnResponse{}, err
+	}
+
+	g.History = append(g.History, newGameState)
+	err = g.Save(game)
+	if err != nil {
+		return TurnResponse{}, err
+	}
+	return TurnResponse{
+		GameState: *newGameState,
+		Messages:  nil,
+	}, nil
+}
+
+func (g *GameSession) RunTurn(instructions *Instructions, game *model.Game) error {
 	oldGameState := g.History[len(g.History)-1]
 	newGameState := oldGameState
 	err := validateInstructions(*instructions, *oldGameState, newGameState)
 	if err != nil {
 		return err
 	}
+
+	// err = processTurn(*oldGameState, newGameState)
+	// if err != nil {
+	// 	  return err
+	// }
 
 	g.History = append(g.History, newGameState)
 	err = g.Save(game)
