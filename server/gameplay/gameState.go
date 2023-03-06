@@ -8,33 +8,35 @@ import (
 
 // GameState represents the state of the player's City State after a turn has been processed - or upon creation of the City State
 type GameState struct {
-	Year                          int  `json:"year,omitempty"`
-	Population                    int  `json:"population,omitempty"`
-	PopulationFed                 int  `json:"population_fed,omitempty"`
-	PopulationFedByCows           int  `json:"population_fed_by_cows,omitempty"`
-	PopulationImmigrated          int  `json:"population_immigrated,omitempty"`
-	PopulationEmigrated           int  `json:"population_emigrated,omitempty"`
-	PopulationStarved             int  `json:"population_starved,omitempty"`
-	PopulationDied                int  `json:"population_died,omitempty"` // needed?  we really may not need variables that can be derived by comparison
-	Bushels                       int  `json:"bushels,omitempty"`
-	AcreValue                     int  `json:"acre_value,omitempty"`
-	AcreGrainYield                int  `json:"acre_grain_yield,omitempty"`
-	PestsAte                      int  `json:"pests_ate,omitempty"`
-	Acres                         int  `json:"acres,omitempty"`
-	AcresPlanted                  int  `json:"acres_planted,omitempty"`
-	AcresPlantedToBushelsRatio    int  `json:"acres_planted_to_bushels_ratio,omitempty"`
-	AcresPlantedToPopulationRatio int  `json:"acres_planted_to_population_ratio,omitempty"`
-	Granaries                     int  `json:"granaries,omitempty"`
-	Plows                         int  `json:"plows,omitempty"`
-	CowHerds                      int  `json:"cow_herds,omitempty"`
-	Stelae                        int  `json:"stelae,omitempty"`
-	Ziggurats                     int  `json:"ziggurats,omitempty"`
-	Temples                       int  `json:"temples,omitempty"`
-	Plague                        int  `json:"plague,omitempty"`
-	BuildingPalace                int  `json:"building_palace,omitempty"`
-	PalaceLvl1                    bool `json:"palace_lvl_1,omitempty"`
-	PalaceLvl2                    bool `json:"palace_lvl_2,omitempty"`
-	PalaceLvl3                    bool `json:"palace_lvl_3,omitempty"`
+	Year                          int  `json:"year"`
+	Population                    int  `json:"population"`
+	PopulationFed                 int  `json:"population_fed"`
+	PopulationFedByCows           int  `json:"population_fed_by_cows"`
+	PopulationImmigrated          int  `json:"population_immigrated"`
+	PopulationEmigrated           int  `json:"population_emigrated"`
+	PopulationStarved             int  `json:"population_starved"`
+	PopulationDied                int  `json:"population_died"` // needed?  we really may not need variables that can be derived by comparison
+	Bushels                       int  `json:"bushels"`
+	BushelsReleased               int  `json:"bushels_released"`
+	BushelsToFeedAPop             int  `json:"bushels_to_feed_a_pop"`
+	AcreValue                     int  `json:"acre_value"`
+	AcreGrainYield                int  `json:"acre_grain_yield"`
+	PestsAte                      int  `json:"pests_ate"`
+	Acres                         int  `json:"acres"`
+	AcresPlanted                  int  `json:"acres_planted"`
+	AcresPlantedToBushelsRatio    int  `json:"acres_planted_to_bushels_ratio"`
+	AcresPlantedToPopulationRatio int  `json:"acres_planted_to_population_ratio"`
+	Granaries                     int  `json:"granaries"`
+	Plows                         int  `json:"plows"`
+	CowHerds                      int  `json:"cow_herds"`
+	Stelae                        int  `json:"stelae"`
+	Ziggurats                     int  `json:"ziggurats"`
+	Temples                       int  `json:"temples"`
+	Plague                        int  `json:"plague"`
+	BuildingPalace                int  `json:"building_palace"`
+	PalaceLvl1                    bool `json:"palace_lvl_1"`
+	PalaceLvl2                    bool `json:"palace_lvl_2"`
+	PalaceLvl3                    bool `json:"palace_lvl_3"`
 }
 
 // Initialize accepts a debug level. It then sets an initial GameState of the player's City State, with the debug level determining some randomization
@@ -60,6 +62,8 @@ func (gs *GameState) Initialize(debug uint8) error {
 	gs.PopulationStarved = 0
 	gs.PopulationDied = 0
 	gs.Bushels = StartingBushels
+	gs.BushelsReleased = StartingBushelsReleased
+	gs.BushelsToFeedAPop = StartingBushelsToFeedAPop
 	gs.AcreGrainYield = StartingAcreGrainYield
 	gs.PestsAte = 200
 	gs.Acres = StartingAcres

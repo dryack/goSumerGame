@@ -12,5 +12,7 @@ const (
 	StartingAcres              = 1000
 	StartingPopulation         = 100
 	StartingBushels            = 2000
+	StartingBushelsReleased    = 2000
 	StartingAcreGrainYield     = 3
+	StartingBushelsToFeedAPop  = 20
 )

@@ -36,6 +36,7 @@ func validateInstructions(instructions Instructions, gameState GameState, newGam
 	}
 	newGameState.Bushels -= instructions.ReleaseBushels
 	tempGameState.Bushels = newGameState.Bushels
+	newGameState.BushelsReleased = instructions.ReleaseBushels
 
 	err = verifyPlanting(instructions, tempGameState)
 	if err != nil {
