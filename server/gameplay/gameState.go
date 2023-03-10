@@ -10,6 +10,7 @@ import (
 type GameState struct {
 	Year                          int  `json:"year"`
 	Population                    int  `json:"population"`
+	PopulationBorn                int  `json:"population_born"`
 	PopulationFed                 int  `json:"population_fed"`
 	PopulationFedByCows           int  `json:"population_fed_by_cows"`
 	PopulationImmigrated          int  `json:"population_immigrated"`
@@ -55,6 +56,7 @@ func (gs *GameState) Initialize(debug uint8) error {
 	}
 	gs.Year = 0
 	gs.Population = StartingPopulation
+	gs.PopulationBorn = 0
 	gs.PopulationFed = 100
 	gs.PopulationFedByCows = 0
 	gs.PopulationImmigrated = 0

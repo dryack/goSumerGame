@@ -5,5 +5,5 @@ type ErrResponse struct {
 
 type TurnResponse struct {
 	GameState GameState `json:"game_state"`
-	Messages  []string  `json:"messages,omitempty"`
+	Messages  []string  `json:"messages"`
 }

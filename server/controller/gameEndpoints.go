@@ -79,5 +79,6 @@ func TakeTurn(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"results": turnResponse})
+	// context.JSON(http.StatusOK, gin.H{"results": turnResponse})
+	context.IndentedJSON(http.StatusOK, gin.H{"results": turnResponse}) // debug
 }
